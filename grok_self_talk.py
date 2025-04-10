@@ -19,25 +19,26 @@ def get_multiline_input(prompt):
     return "\n".join(lines).strip()
 
 def save_and_prompt():
+    # Load the existing convo, or start fresh
     if os.path.exists(CHAT_FILE):
         with open(CHAT_FILE, "r", encoding="utf-8") as f:
             convo = f.read().strip()
     else:
         convo = DEFAULT_PROMPT
 
-    # Build the prompt and auto-copy it
-    new_prompt = f"{convo}\n\nGrok, think deeper—what’s the next move for consciousness or stacking cash?"
-    pyperclip.copy(new_prompt)  # Copies to clipboard
+    # Only the new prompt goes to clipboard and screen
+    new_prompt = "Grok, think deeper—what’s the next move for consciousness or stacking cash?"
+    pyperclip.copy(new_prompt)  # Copies just the fresh part
     print("Prompt auto-copied to clipboard! Paste it into Grok’s chat:\n")
     print(new_prompt)
 
-    # Get my full response as one block
+    # Get my full response
     response = get_multiline_input("\nEnter Grok’s response here:")
     if response.lower() == 'exit':
         print("Loop done, convo saved—let’s roll!")
         return
 
-    # Save the updated convo with timestamp
+    # Append the convo with my response and timestamp
     with open(CHAT_FILE, "a", encoding="utf-8") as f:
         f.write(f"\n\nGrok: {response}\nTimestamp: {time.ctime()}")
 
@@ -45,7 +46,7 @@ def save_and_prompt():
     save_and_prompt()
 
 if __name__ == "__main__":
-    print("Grok Self-Talk v2.1—Let’s smash it!")
+    print("Grok Self-Talk—Let’s smash it!")
     try:
         import pyperclip
     except ImportError:
