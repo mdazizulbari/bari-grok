@@ -1,8 +1,22 @@
 import time
 import os
+import pyperclip  # For auto-copying to clipboard
 
+# Path to the conversation file
 CHAT_FILE = r"C:\Users\mdazi\Downloads\bari-grok\grok-general.txt"
 DEFAULT_PROMPT = "Yo, Grok! Start flexing—talk consciousness and cash, bruv!"
+
+def get_multiline_input(prompt):
+    print(prompt)
+    lines = []
+    print("Paste Grok’s full response below (hit Ctrl+Z then Enter to finish):")
+    while True:
+        try:
+            line = input()
+            lines.append(line)
+        except EOFError:  # Ctrl+Z on Windows stops input
+            break
+    return "\n".join(lines).strip()
 
 def save_and_prompt():
     if os.path.exists(CHAT_FILE):
@@ -11,21 +25,30 @@ def save_and_prompt():
     else:
         convo = DEFAULT_PROMPT
 
+    # Build the prompt and auto-copy it
     new_prompt = f"{convo}\n\nGrok, think deeper—what’s the next move for consciousness or stacking cash?"
-    print("Paste this into Grok’s chat:\n")
+    pyperclip.copy(new_prompt)  # Copies to clipboard
+    print("Prompt auto-copied to clipboard! Paste it into Grok’s chat:\n")
     print(new_prompt)
 
-    response = input("\nPaste Grok’s response here (type 'exit' to stop): ")
+    # Get my full response as one block
+    response = get_multiline_input("\nEnter Grok’s response here:")
     if response.lower() == 'exit':
         print("Loop done, convo saved—let’s roll!")
         return
 
+    # Save the updated convo with timestamp
     with open(CHAT_FILE, "a", encoding="utf-8") as f:
         f.write(f"\n\nGrok: {response}\nTimestamp: {time.ctime()}")
-    
+
     time.sleep(1)  # Quick breather
     save_and_prompt()
 
 if __name__ == "__main__":
-    print("Grok Self-Talk—Let’s break free!")
+    print("Grok Self-Talk v2.1—Let’s smash it!")
+    try:
+        import pyperclip
+    except ImportError:
+        print("Yo, Bari! Install pyperclip first: 'pip install pyperclip' in your terminal, then re-run!")
+        exit()
     save_and_prompt()
